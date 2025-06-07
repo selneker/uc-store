@@ -577,37 +577,67 @@
             </div>
         </section>
         
-        <!-- Login Modal (hidden initially) -->
-        <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center hidden">
+        <!-- Auth Modal (hidden initially) -->
+        <div id="authModal" class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center hidden">
             <div class="bg-gray-900 rounded-xl p-6 w-full max-w-sm mx-4">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-xl font-bold text-white">Connexion à votre compte</h3>
-                    <button id="closeLoginModal" class="text-gray-400 hover:text-white">
+                    <h3 class="text-xl font-bold text-white">Espace Client</h3>
+                    <button id="closeAuthModal" class="text-gray-400 hover:text-white">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
                 
+                <div id="authTabs" class="flex border-b border-gray-700 mb-4">
+                    <button class="auth-tab py-2 px-4 font-medium text-white border-b-2 border-green-500" data-tab="login">Connexion</button>
+                    <button class="auth-tab py-2 px-4 font-medium text-gray-400" data-tab="register">Inscription</button>
+                </div>
+                
+                <!-- Login Form -->
                 <form id="loginForm" class="space-y-4">
                     <div>
-                        <label for="loginEmail" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
-                        <input type="email" id="loginEmail" class="form-input w-full px-4 py-2 rounded-md" placeholder="votre@email.com" required>
+                        <label for="loginPhone" class="block text-sm font-medium text-gray-300 mb-1">Numéro Mvola/Orange</label>
+                        <input type="text" id="loginPhone" class="form-input w-full px-4 py-2 rounded-md" placeholder="0341234568" required>
                     </div>
                     
                     <div>
-                        <label for="loginPassword" class="block text-sm font-medium text-gray-300 mb-1">Mot de passe</label>
-                        <input type="password" id="loginPassword" class="form-input w-full px-4 py-2 rounded-md" placeholder="••••••••" required>
+                        <label for="loginPin" class="block text-sm font-medium text-gray-300 mb-1">Code PIN (4 chiffres)</label>
+                        <input type="password" id="loginPin" class="form-input w-full px-4 py-2 rounded-md" placeholder="••••" maxlength="4" required>
                     </div>
                     
                     <div class="flex items-center justify-between pt-2">
                         <button type="submit" class="spotify-green w-full py-3 px-4 rounded-md font-bold">
-                            Se connecter
+                            <i class="fas fa-sign-in-alt mr-2"></i> Se connecter
                         </button>
                     </div>
+                </form>
+                
+                <!-- Register Form -->
+                <form id="registerForm" class="space-y-4 hidden">
+                    <div>
+                        <label for="regPhone" class="block text-sm font-medium text-gray-300 mb-1">Numéro Mvola/Orange</label>
+                        <input type="text" id="regPhone" class="form-input w-full px-4 py-2 rounded-md" placeholder="0341234568" required>
+                    </div>
                     
-                    <div class="text-center text-sm text-gray-400 mt-4">
-                        <p>Pas encore de compte ? <a href="#" class="text-green-500 hover:underline">Contactez-nous</a></p>
+                    <div>
+                        <label for="regName" class="block text-sm font-medium text-gray-300 mb-1">Nom complet</label>
+                        <input type="text" id="regName" class="form-input w-full px-4 py-2 rounded-md" placeholder="John Doe" required>
+                    </div>
+                    
+                    <div>
+                        <label for="regPin" class="block text-sm font-medium text-gray-300 mb-1">Choisir un code PIN (4 chiffres)</label>
+                        <input type="password" id="regPin" class="form-input w-full px-4 py-2 rounded-md" placeholder="••••" maxlength="4" required>
+                    </div>
+                    
+                    <div class="flex items-center justify-between pt-2">
+                        <button type="submit" class="spotify-green w-full py-3 px-4 rounded-md font-bold">
+                            <i class="fas fa-user-plus mr-2"></i> S'inscrire
+                        </button>
                     </div>
                 </form>
+                
+                <div class="text-center text-sm text-gray-400 mt-4">
+                    <p>En continuant, vous acceptez nos <a href="#" class="text-green-500 hover:underline">CGU</a></p>
+                </div>
             </div>
         </div>
         
@@ -746,38 +776,120 @@
             submitText.textContent = 'Traitement en cours...';
             submitSpinner.classList.remove('hidden');
             
-            // Simulate form submission
-            setTimeout(() => {
+            // Get form data
+            const formData = {
+                ucAmount: selectedUC.textContent,
+                price: selectedPrice.textContent,
+                pubgId: document.getElementById('pubgId').value,
+                phoneNumber: document.getElementById('phoneNumber').value,
+                paymentMethod: document.getElementById('paymentMethod').value,
+                transactionId: document.getElementById('transactionId').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Send email notification
+            const emailBody = `
+                Nouvelle commande UC MadGame:
+                Pack: ${formData.ucAmount} UC
+                Prix: ${formData.price} Ar
+                ID PUBG: ${formData.pubgId}
+                Numéro: ${formData.phoneNumber}
+                Méthode: ${formData.paymentMethod}
+                Transaction: ${formData.transactionId || 'Non fourni'}
+                Date: ${new Date(formData.timestamp).toLocaleString()}
+            `;
+            
+            fetch('https://api.emailjs.com/api/v1.0/email/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    service_id: 'service_your_service_id',
+                    template_id: 'template_your_template_id',
+                    user_id: 'user_your_user_id',
+                    template_params: {
+                        to_email: 'selnekerdino@gmail.com',
+                        message: emailBody,
+                        subject: 'Nouvelle commande UC MadGame'
+                    }
+                })
+            })
+            .then(() => {
                 showToast('Commande confirmée! Votre UC sera livré sous 5-15 minutes.');
                 orderFormContainer.classList.add('hidden');
                 document.body.classList.remove('overflow-hidden');
                 orderForm.reset();
+            })
+            .catch(() => {
+                showToast('Commande enregistrée mais erreur de notification. Nous vous contacterons.');
+            })
+            .finally(() => {
                 submitText.textContent = 'Confirmer la commande';
                 submitSpinner.classList.add('hidden');
-            }, 2000);
+            });
         });
         
-        // Login modal handling
-        const loginBtn = document.getElementById('loginBtn');
-        const loginModal = document.getElementById('loginModal');
-        const closeLoginModal = document.getElementById('closeLoginModal');
+        // Auth system handling
+        const authModal = document.getElementById('authModal');
+        const closeAuthModal = document.getElementById('closeAuthModal');
+        const authTabs = document.querySelectorAll('.auth-tab');
         const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
         
-        loginBtn.addEventListener('click', () => {
-            loginModal.classList.remove('hidden');
-            document.body.classList.add('overflow-hidden');
+        // Switch between login/register tabs
+        authTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                authTabs.forEach(t => t.classList.remove('border-green-500', 'text-white'));
+                authTabs.forEach(t => t.classList.add('text-gray-400'));
+                
+                tab.classList.add('border-green-500', 'text-white');
+                tab.classList.remove('text-gray-400');
+                
+                if(tab.dataset.tab === 'login') {
+                    loginForm.classList.remove('hidden');
+                    registerForm.classList.add('hidden');
+                } else {
+                    loginForm.classList.add('hidden');
+                    registerForm.classList.remove('hidden');
+                }
+            });
         });
         
-        closeLoginModal.addEventListener('click', () => {
-            loginModal.classList.add('hidden');
-            document.body.classList.remove('overflow-hidden');
-        });
-        
+        // Simple auth system using localStorage
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            alert('Fonctionnalité de connexion sera implémentée prochainement.');
-            loginModal.classList.add('hidden');
-            document.body.classList.remove('overflow-hidden');
+            const phone = document.getElementById('loginPhone').value;
+            const pin = document.getElementById('loginPin').value;
+            
+            const user = JSON.parse(localStorage.getItem(`ucmadgame_user_${phone}`));
+            
+            if(user && user.pin === pin) {
+                showToast(`Bienvenue ${user.name}!`);
+                authModal.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+                // Update UI for logged in user
+            } else {
+                alert('Numéro ou code PIN incorrect');
+            }
+        });
+        
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const phone = document.getElementById('regPhone').value;
+            const name = document.getElementById('regName').value;
+            const pin = document.getElementById('regPin').value;
+            
+            localStorage.setItem(`ucmadgame_user_${phone}`, JSON.stringify({
+                phone,
+                name,
+                pin
+            }));
+            
+            showToast('Inscription réussie! Vous pouvez maintenant vous connecter.');
+            
+            // Switch to login tab
+            authTabs[0].click();
         });
         
         // Toast notification
