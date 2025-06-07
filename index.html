@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UC MadGame - Achetez vos UC PUBG MOBILE en Ariary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+        }
+        
+        .sidebar {
+            width: 250px;
+            transition: all 0.3s;
+        }
+        
+        .content {
+            margin-left: 250px;
+            transition: all 0.3s;
+        }
+        
+        .spotify-green {
+            background-color: #1DB954;
+        }
+        
+        .spotify-green:hover {
+            background-color: #1ed760;
+        }
+        
+        .uc-card {
+            background: linear-gradient(135deg, #282828 0%, #121212 100%);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .uc-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Animation for price cards */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                position: fixed;
+                z-index: 10;
+                height: 100vh;
+                left: -250px;
+            }
+            
+            .sidebar.open {
+                left: 0;
+                width: 250px;
+            }
+            
+            .content {
+                margin-left: 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+        
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Form styling */
+        .form-input {
+            background-color: #282828;
+            border: 1px solid #404040;
+            color: white;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #1DB954;
+        }
+        
+        /* Payment method cards */
+        .payment-card {
+            background-color: #282828;
+            transition: all 0.3s;
+        }
+        
+        .payment-card:hover {
+            background-color: #383838;
+        }
+        
+        /* Loading spinner */
+        .loader {
+            border-top-color: #1DB954;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile menu button -->
+    <div class="md:hidden fixed top-4 right-4 z-20">
+        <button id="mobileMenuBtn" class="text-white bg-black bg-opacity-70 p-2 rounded-full">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+    </div>
+    
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar bg-black fixed h-full overflow-y-auto">
+        <div class="p-6">
+            <h1 class="text-2xl font-bold text-white mb-2">UC MadGame</h1>
+            <p class="text-gray-400 text-sm">Achetez vos UC en Ariary</p>
+        </div>
+        
+        <nav class="mt-8">
+            <div class="px-6 py-3 text-gray-400 uppercase text-xs font-semibold tracking-wider">Menu</div>
+            <a href="#home" class="flex items-center px-6 py-3 text-white bg-gray-900">
+                <i class="fas fa-home mr-3"></i>
+                Accueil
+            </a>
+            <a href="#shop" class="flex items-center px-6 py-3 text-white hover:bg-gray-900">
+                <i class="fas fa-shopping-cart mr-3"></i>
+                Boutique
+            </a>
+            <a href="#payment" class="flex items-center px-6 py-3 text-white hover:bg-gray-900">
+                <i class="fas fa-money-bill-wave mr-3"></i>
+                Paiement
+            </a>
+            <a href="#faq" class="flex items-center px-6 py-3 text-white hover:bg-gray-900">
+                <i class="fas fa-question-circle mr-3"></i>
+                FAQ
+            </a>
+            
+            <div class="px-6 py-3 text-gray-400 uppercase text-xs font-semibold tracking-wider mt-8">Compte</div>
+            <button id="loginBtn" class="flex items-center w-full px-6 py-3 text-white hover:bg-gray-900">
+                <i class="fas fa-user-circle mr-3"></i>
+                Connexion
+            </button>
+        </nav>
+        
+        <div class="absolute bottom-0 w-full p-6">
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center mr-3">
+                    <i class="fas fa-user text-gray-400"></i>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-white">Invité</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div id="content" class="content min-h-screen">
+        <!-- Hero Section -->
+        <section id="home" class="relative h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-black">
+            <div class="absolute inset-0 overflow-hidden">
+                <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')] bg-cover bg-center opacity-20"></div>
+            </div>
+            
+            <div class="container mx-auto px-6 relative z-10 text-center">
+                <h1 class="text-5xl md:text-6xl font-bold mb-6 text-white">Achetez vos UC <span class="text-green-500">PUBG MOBILE</span></h1>
+                <p class="text-xl md:text-2xl text-gray-300 mb-8">En toute sécurité et au meilleur prix en Ariary</p>
+                
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="#shop" class="spotify-green hover:spotify-green text-white font-bold py-4 px-8 rounded-full text-lg transition duration-300 transform hover:scale-105">
+                        <i class="fas fa-shopping-cart mr-2"></i> Commander maintenant
+                    </a>
+                    <a href="#payment" class="bg-transparent border-2 border-white text-white font-bold py-4 px-8 rounded-full text-lg transition duration-300 hover:bg-white hover:text-black transform hover:scale-105">
+                        <i class="fas fa-info-circle mr-2"></i> Comment payer
+                    </a>
+                </div>
+                
+                <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                    <div class="bg-gray-800 bg-opacity-60 backdrop-blur-sm rounded-lg p-4 fade-in" style="animation-delay: 0.1s;">
+                        <p class="text-sm text-gray-400">60 UC</p>
+                        <p class="text-xl font-bold text-white">5 000 Ar</p>
+                    </div>
+                    <div class="bg-gray-800 bg-opacity-60 backdrop-blur-sm rounded-lg p-4 fade-in" style="animation-delay: 0.2s;">
+                        <p class="text-sm text-gray-400">325 UC</p>
+                        <p class="text-xl font-bold text-white">25 000 Ar</p>
+                    </div>
+                    <div class="bg-gray-800 bg-opacity-60 backdrop-blur-sm rounded-lg p-4 fade-in" style="animation-delay: 0.3s;">
+                        <p class="text-sm text-gray-400">660 UC</p>
+                        <p class="text-xl font-bold text-white">45 000 Ar</p>
+                    </div>
+                    <div class="bg-gray-800 bg-opacity-60 backdrop-blur-sm rounded-lg p-4 fade-in" style="animation-delay: 0.4s;">
+                        <p class="text-sm text-gray-400">1800 UC</p>
+                        <p class="text-xl font-bold text-white">120 000 Ar</p>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="#shop" class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-gray-400 hover:text-white">
+                <i class="fas fa-chevron-down text-2xl"></i>
+            </a>
+        </section>
+        
+        <!-- Shop Section -->
+        <section id="shop" class="py-20 bg-gray-900">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white">
+                    <i class="fas fa-shopping-cart mr-2 text-green-500"></i> Boutique UC
+                </h2>
+                <p class="text-gray-400 mb-12 max-w-2xl">Choisissez votre pack d'UC parmi notre sélection et complétez votre transaction en quelques minutes seulement.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- UC Item 1 -->
+                    <div class="uc-card rounded-lg p-6 flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-white">60 UC</h3>
+                                <p class="text-gray-400 text-sm">Pack de départ</p>
+                            </div>
+                            <div class="bg-gray-800 rounded-full px-3 py-1">
+                                <span class="text-green-500 font-bold">5 000 Ar</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 mb-6">
+                            <ul class="text-gray-300 text-sm space-y-2">
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                    Livraison instantanée
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                    Support 24/7
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                    Paiement sécurisé
+                                </li>
+                            </ul>
+                        </div>
+                        <button class="mt-auto spotify-green text-white font-bold py-3 px-4 rounded-md w-full flex items-center justify-center transition duration-300 transform hover:scale-[1.02] buy-btn" data-uc="60" data-price="5000">
+                            <i class="fas fa-cart-plus mr-2"></i> Acheter maintenant
+                        </button>
+                    </div>
+                    
+                    <!-- UC Item 2 -->
+                    <div class="uc-card rounded-lg p-6 flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-white">325 UC</h3>
+                                <p class="text-gray-400 text-sm">Pack économique</p>
+                            </div>
+                            <div class="bg-gray-800 rounded-full px-3 py-1">
+                                <span class="text-green-500 font-bold">25 000 Ar</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 mb-6">
+                            <ul class="text-gray-300 text-sm space-y-2">
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                    Livraison instantanée
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                    Support 24/7
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                    Économisez 15% vs petits packs
+                                </li>
+                            </ul>
+                        </div>
+                        <button class="mt-auto spotify-green text-white font-bold py-3 px-4 rounded-md w-full flex items-center justify-center transition duration-300 transform hover:scale-[1.02] buy-btn" data-uc="325" data-price="25000">
+                            <i class="fas fa-cart-plus mr-2"></i> Acheter maintenant
+                        </button>
+                    </div>
+                    
+                    <!-- UC Item 3 - Most Popular -->
+                    <div class="uc-card rounded-lg p-6 flex flex-col border-2 border-green-500 relative">
+                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                            POPULAIRE
+                        </div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-white">660 UC</h3>
+                                <p class="text-gray-400 text-sm">Meilleur rapport qualité/prix</p>
+                            </div>
+                            <div class="bg-gray-800 rounded-full px-3 py-1">
+                                <span class="text-green-500 font-bold">45 000 Ar</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 mb-6">
+                            <ul class="text-gray-300 text-sm space-y-2">
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                    Livraison instantanée
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                    Support 24/7
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                    Économisez 30% vs petits packs
+                                </li>
+                            </ul>
+                        </div>
+                        <button class="mt-auto spotify-green text-white font-bold py-3 px-4 rounded-md w-full flex items-center justify-center transition duration-300 transform hover:scale-[1.02] buy-btn" data-uc="660" data-price="45000">
+                            <i class="fas fa-cart-plus mr-2"></i> Acheter maintenant
+                        </button>
+                    </div>
+                    
+                    <!-- UC Item 4 -->
+                    <div class="uc-card rounded-lg p-6 flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-white">1800 UC</h3>
+                                <p class="text-gray-400 text-sm">Pack VIP</p>
+                            </div>
+                            <div class="bg-gray-800 rounded-full px-3 py-1">
+                                <span class="text-green-500 font-bold">120 000 Ar</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 mb-6">
+                            <ul class="text-gray-300 text-sm space-y-2">
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                    Livraison instantanée
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                    Support prioritaire
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                    Économisez 40% vs petits packs
+                                </li>
+                            </ul>
+                        </div>
+                        <button class="mt-auto spotify-green text-white font-bold py-3 px-4 rounded-md w-full flex items-center justify-center transition duration-300 transform hover:scale-[1.02] buy-btn" data-uc="1800" data-price="120000">
+                            <i class="fas fa-cart-plus mr-2"></i> Acheter maintenant
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Payment Section -->
+        <section id="payment" class="py-20 bg-black">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-bold mb-2 text-white">
+                    <i class="fas fa-money-bill-wave mr-2 text-green-500"></i> Paiement sécurisé
+                </h2>
+                <p class="text-gray-400 mb-12 max-w-2xl">Effectuez votre paiement via Mvola ou Orange Money en toute sécurité.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    <!-- Mvola Card -->
+                    <div class="payment-card rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-md bg-purple-600 flex items-center justify-center mr-4">
+                                <i class="fas fa-mobile-alt text-white text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white">Paiement via Mvola</h3>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="bg-gray-800 p-4 rounded-lg">
+                                <p class="text-gray-400 text-sm mb-1">Numéro à payer :</p>
+                                <p class="text-xl font-bold text-white">034 81 305 18</p>
+                            </div>
+                            <ul class="text-gray-300 text-sm space-y-2">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    Envoyez le montant exact correspondant à votre commande
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    Ne modifiez pas la référence du paiement
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    Votre UC sera livré dans les 5 minutes après confirmation
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Orange Money Card -->
+                    <div class="payment-card rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-md bg-orange-500 flex items-center justify-center mr-4">
+                                <i class="fas fa-money-bill-alt text-white text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white">Paiement via Orange Money</h3>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="bg-gray-800 p-4 rounded-lg">
+                                <p class="text-gray-400 text-sm mb-1">Numéro à payer :</p>
+                                <p class="text-xl font-bold text-white">037 75 198 33</p>
+                            </div>
+                            <ul class="text-gray-300 text-sm space-y-2">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    Envoyez le montant exact de votre commande
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    Conservez le code de transaction
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                    Livraison rapide après vérification
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Payment Instructions -->
+                <div class="bg-gray-800 bg-opacity-50 rounded-xl p-6 mb-12">
+                    <h3 class="text-xl font-bold text-white mb-4 flex items-center">
+                        <i class="fas fa-info-circle text-green-500 mr-2"></i> Instructions pour payer
+                    </h3>
+                    <ol class="list-decimal list-inside text-gray-300 space-y-3">
+                        <li>Sélectionnez le pack d'UC que vous souhaitez acheter</li>
+                        <li>Notez le montant exact en Ariary</li>
+                        <li>Effectuez le paiement via Mvola ou Orange Money vers les numéros indiqués</li>
+                        <li>Envoyez le montant exact (ne changez pas le montant)</li>
+                        <li>Remplissez le formulaire de confirmation avec votre ID PUBG et le numéro utilisé pour payer</li>
+                        <li>Joignez une capture d'écran du paiement si possible</li>
+                        <li>Votre UC sera ajouté à votre compte dans les plus brefs délais</li>
+                    </ol>
+                    <div class="mt-6 bg-green-900 bg-opacity-30 border-l-4 border-green-500 p-4">
+                        <p class="text-green-300"><i class="fas fa-lightbulb mr-2"></i> <strong>Astuce :</strong> Votre ID PUBG se trouve dans votre profil de jeu. C'est une chaîne de chiffres unique à votre compte.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Order Form (hidden initially) -->
+        <div id="orderFormContainer" class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center hidden">
+            <div class="bg-gray-900 rounded-xl p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-white">Confirmation de commande</h3>
+                    <button id="closeOrderForm" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div id="orderSummary" class="mb-6 p-4 bg-gray-800 rounded-lg">
+                    <h4 class="font-bold text-white mb-2">Résumé de la commande</h4>
+                    <p class="text-gray-300"><span class="font-semibold">Pack :</span> <span id="selectedUC">60</span> UC</p>
+                    <p class="text-gray-300"><span class="font-semibold">Prix :</span> <span id="selectedPrice">5 000</span> Ar</p>
+                </div>
+                
+                <form id="orderForm" class="space-y-4">
+                    <div>
+                        <label for="pubgId" class="block text-sm font-medium text-gray-300 mb-1">ID PUBG</label>
+                        <input type="text" id="pubgId" class="form-input w-full px-4 py-2 rounded-md" placeholder="Ex: 5168132458" required>
+                    </div>
+                    
+                    <div>
+                        <label for="phoneNumber" class="block text-sm font-medium text-gray-300 mb-1">Numéro de paiement</label>
+                        <input type="text" id="phoneNumber" class="form-input w-full px-4 py-2 rounded-md" placeholder="Ex: 0348130518" required>
+                    </div>
+                    
+                    <div>
+                        <label for="paymentMethod" class="block text-sm font-medium text-gray-300 mb-1">Méthode de paiement</label>
+                        <select id="paymentMethod" class="form-input w-full px-4 py-2 rounded-md" required>
+                            <option value="">Sélectionnez...</option>
+                            <option value="mvola">Mvola</option>
+                            <option value="orange">Orange Money</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="transactionId" class="block text-sm font-medium text-gray-300 mb-1">Code de transaction (optionnel)</label>
+                        <input type="text" id="transactionId" class="form-input w-full px-4 py-2 rounded-md" placeholder="Ex: XY123456">
+                    </div>
+                    
+                    <div>
+                        <label for="screenshot" class="block text-sm font-medium text-gray-300 mb-1">Capture d'écran du paiement (optionnel)</label>
+                        <input type="file" id="screenshot" class="form-input w-full px-1 py-1 rounded-md text-sm" accept="image/*">
+                    </div>
+                    
+                    <div class="pt-2">
+                        <button type="submit" class="spotify-green w-full py-3 px-4 rounded-md font-bold flex items-center justify-center">
+                            <span id="submitText">Confirmer la commande</span>
+                            <div id="submitSpinner" class="ml-2 w-5 h-5 border-2 border-white border-t-2 border-t-transparent rounded-full animate-spin hidden"></div>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- FAQ Section -->
+        <section id="faq" class="py-20 bg-gray-900">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-bold mb-12 text-white">
+                    <i class="fas fa-question-circle mr-2 text-green-500"></i> FAQ
+                </h2>
+                
+                <div class="space-y-4 max-w-3xl mx-auto">
+                    <!-- FAQ Item 1 -->
+                    <div class="bg-gray-800 rounded-lg overflow-hidden" x-data="{ open: false }">
+                        <button @click="open = !open" class="w-full flex justify-between items-center p-5 text-left">
+                            <h3 class="font-medium text-white">Combien de temps prend la livraison des UC ?</h3>
+                            <i class="fas transition-transform duration-300" :class="{ 'fa-chevron-down': !open, 'fa-chevron-up': open }"></i>
+                        </button>
+                        <div x-show="open" x-collapse class="px-5 pb-5 text-gray-300">
+                            <p>La livraison des UC se fait généralement dans les 5 à 15 minutes après confirmation du paiement. Dans de rares cas où il y a beaucoup de commandes simultanées, cela peut prendre jusqu'à 30 minutes. Si vous n'avez pas reçu vos UC après 30 minutes, contactez-nous via notre page de contact avec votre numéro de transaction.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ Item 2 -->
+                    <div class="bg-gray-800 rounded-lg overflow-hidden" x-data="{ open: false }">
+                        <button @click="open = !open" class="w-full flex justify-between items-center p-5 text-left">
+                            <h3 class="font-medium text-white">Est-ce que mon compte peut être banni en utilisant ce service ?</h3>
+                            <i class="fas transition-transform duration-300" :class="{ 'fa-chevron-down': !open, 'fa-chevron-up': open }"></i>
+                        </button>
+                        <div x-show="open" x-collapse class="px-5 pb-5 text-gray-300">
+                            <p>Non, notre service est 100% légal et sécurisé. Nous utilisons les méthodes officielles de PUBG Mobile pour recharger votre compte avec des UC. Votre compte ne court aucun risque de bannissement. Nous travaillons directement avec PUBG Corporation comme partenaire revendeur.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ Item 3 -->
+                    <div class="bg-gray-800 rounded-lg overflow-hidden" x-data="{ open: false }">
+                        <button @click="open = !open" class="w-full flex justify-between items-center p-5 text-left">
+                            <h3 class="font-medium text-white">Que faire si je me suis trompé en envoyant le montant ?</h3>
+                            <i class="fas transition-transform duration-300" :class="{ 'fa-chevron-down': !open, 'fa-chevron-up': open }"></i>
+                        </button>
+                        <div x-show="open" x-collapse class="px-5 pb-5 text-gray-300">
+                            <p>Si vous avez envoyé un montant incorrect :</p>
+                            <ol class="list-decimal list-inside mt-2 space-y-1">
+                                <li>Contactez-nous immédiatement via votre espace client ou par email à support@ucmadgame.mg</li>
+                                <li>Fournissez-nous le numéro de transaction exact</li>
+                                <li>Nous vous proposerons soit un remboursement, soit un ajustement de votre commande selon votre préférence</li>
+                            </ol>
+                            <p class="mt-2 text-yellow-300">Note : Les remboursements peuvent prendre jusqu'à 48 heures.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ Item 4 -->
+                    <div class="bg-gray-800 rounded-lg overflow-hidden" x-data="{ open: false }">
+                        <button @click="open = !open" class="w-full flex justify-between items-center p-5 text-left">
+                            <h3 class="font-medium text-white">Pourquoi vos prix sont moins chers que dans le jeu ?</h3>
+                            <i class="fas transition-transform duration-300" :class="{ 'fa-chevron-down': !open, 'fa-chevron-up': open }"></i>
+                        </button>
+                        <div x-show="open" x-collapse class="px-5 pb-5 text-gray-300">
+                            <p>Nous bénéficions de tarifs préférentiels en tant que revendeur officiel et achetons les UC en gros volume, ce qui nous permet de proposer des prix compétitifs. De plus, comme nous sommes basés à Madagascar, nous évitons les frais de change et taxes liés aux achats internationaux que vous auriez en achetant directement dans le jeu.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ Item 5 -->
+                    <div class="bg-gray-800 rounded-lg overflow-hidden" x-data="{ open: false }">
+                        <button @click="open = !open" class="w-full flex justify-between items-center p-5 text-left">
+                            <h3 class="font-medium text-white">Comment puis-je être sûr que mon paiement est sécurisé ?</h3>
+                            <i class="fas transition-transform duration-300" :class="{ 'fa-chevron-down': !open, 'fa-chevron-up': open }"></i>
+                        </button>
+                        <div x-show="open" x-collapse class="px-5 pb-5 text-gray-300">
+                            <p>Nous utilisons uniquement des moyens de paiement officiels (Mvola et Orange Money) et notre numéro est certifié. Nous ne stockons aucune information de paiement et toute transaction est directement gérée par les systèmes sécurisés de Mvola et Orange Money. Vous recevrez toujours une confirmation de paiement de votre opérateur.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Login Modal (hidden initially) -->
+        <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center hidden">
+            <div class="bg-gray-900 rounded-xl p-6 w-full max-w-sm mx-4">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-white">Connexion à votre compte</h3>
+                    <button id="closeLoginModal" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form id="loginForm" class="space-y-4">
+                    <div>
+                        <label for="loginEmail" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                        <input type="email" id="loginEmail" class="form-input w-full px-4 py-2 rounded-md" placeholder="votre@email.com" required>
+                    </div>
+                    
+                    <div>
+                        <label for="loginPassword" class="block text-sm font-medium text-gray-300 mb-1">Mot de passe</label>
+                        <input type="password" id="loginPassword" class="form-input w-full px-4 py-2 rounded-md" placeholder="••••••••" required>
+                    </div>
+                    
+                    <div class="flex items-center justify-between pt-2">
+                        <button type="submit" class="spotify-green w-full py-3 px-4 rounded-md font-bold">
+                            Se connecter
+                        </button>
+                    </div>
+                    
+                    <div class="text-center text-sm text-gray-400 mt-4">
+                        <p>Pas encore de compte ? <a href="#" class="text-green-500 hover:underline">Contactez-nous</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="bg-black py-12">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-4">UC MadGame</h3>
+                        <p class="text-gray-400 mb-4">Le moyen le plus rapide et sûr d'acheter des UC PUBG MOBILE en Ariary.</p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-lg font-semibold text-white mb-4">Liens rapides</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#home" class="text-gray-400 hover:text-white">Accueil</a></li>
+                            <li><a href="#shop" class="text-gray-400 hover:text-white">Boutique</a></li>
+                            <li><a href="#payment" class="text-gray-400 hover:text-white">Comment payer</a></li>
+                            <li><a href="#faq" class="text-gray-400 hover:text-white">FAQ</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-lg font-semibold text-white mb-4">Contact</h4>
+                        <ul class="space-y-2 text-gray-400">
+                            <li class="flex items-start"><i class="fas fa-envelope mr-2 mt-1 text-sm"></i> contact@ucmadgame.mg</li>
+                            <li class="flex items-start"><i class="fas fa-phone-alt mr-2 mt-1 text-sm"></i> +261 34 81 305 18</li>
+                            <li class="flex items-start"><i class="fas fa-map-marker-alt mr-2 mt-1 text-sm"></i> Antananarivo, Madagascar</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-lg font-semibold text-white mb-4">Paiements acceptés</h4>
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center justify-center bg-purple-600 rounded-md p-2 w-12 h-12">
+                                <i class="fas fa-mobile-alt text-white text-xl"></i>
+                            </div>
+                            <div class="flex items-center justify-center bg-orange-500 rounded-md p-2 w-12 h-12">
+                                <i class="fas fa-money-bill-alt text-white text-xl"></i>
+                            </div>
+                        </div>
+                        <p class="text-gray-400 mt-4 text-sm">Toutes les transactions sont sécurisées et cryptées.</p>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-800 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-500 text-sm">© 2023 UC MadGame. Tous droits réservés.</p>
+                    <div class="flex space-x-6 mt-4 md:mt-0">
+                        <a href="#" class="text-gray-500 hover:text-white text-sm">Conditions générales</a>
+                        <a href="#" class="text-gray-500 hover:text-white text-sm">Politique de confidentialité</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        
+        <!-- Order Confirmation Toast (hidden initially) -->
+        <div id="orderToast" class="fixed bottom-4 right-4 w-full max-w-xs bg-gray-800 border border-gray-700 rounded-lg shadow-lg hidden z-50" role="alert">
+            <div class="flex p-4">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-check-circle text-green-500 text-xl mt-0.5"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-white font-medium" id="toastMessage">Commande confirmée avec succès!</p>
+                </div>
+                <button type="button" id="closeToast" class="ml-auto -mx-1.5 -my-1.5 bg-gray-800 text-gray-400 hover:text-white rounded-lg p-1.5 inline-flex items-center">
+                    <span class="sr-only">Close</span>
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const content = document.getElementById('content');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            document.body.classList.toggle('overflow-hidden');
+        });
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('#sidebar a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('open');
+                    document.body.classList.remove('overflow-hidden');
+                }
+            });
+        });
+        
+        // Order form handling
+        const buyButtons = document.querySelectorAll('.buy-btn');
+        const orderFormContainer = document.getElementById('orderFormContainer');
+        const closeOrderForm = document.getElementById('closeOrderForm');
+        const selectedUC = document.getElementById('selectedUC');
+        const selectedPrice = document.getElementById('selectedPrice');
+        const orderForm = document.getElementById('orderForm');
+        const submitText = document.getElementById('submitText');
+        const submitSpinner = document.getElementById('submitSpinner');
+        
+        buyButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const ucAmount = button.getAttribute('data-uc');
+                const price = button.getAttribute('data-price');
+                
+                selectedUC.textContent = ucAmount;
+                selectedPrice.textContent = parseInt(price).toLocaleString('fr-FR');
+                
+                orderFormContainer.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            });
+        });
+        
+        closeOrderForm.addEventListener('click', () => {
+            orderFormContainer.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        });
+        
+        orderForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            submitText.textContent = 'Traitement en cours...';
+            submitSpinner.classList.remove('hidden');
+            
+            // Simulate form submission
+            setTimeout(() => {
+                showToast('Commande confirmée! Votre UC sera livré sous 5-15 minutes.');
+                orderFormContainer.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+                orderForm.reset();
+                submitText.textContent = 'Confirmer la commande';
+                submitSpinner.classList.add('hidden');
+            }, 2000);
+        });
+        
+        // Login modal handling
+        const loginBtn = document.getElementById('loginBtn');
+        const loginModal = document.getElementById('loginModal');
+        const closeLoginModal = document.getElementById('closeLoginModal');
+        const loginForm = document.getElementById('loginForm');
+        
+        loginBtn.addEventListener('click', () => {
+            loginModal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        });
+        
+        closeLoginModal.addEventListener('click', () => {
+            loginModal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        });
+        
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Fonctionnalité de connexion sera implémentée prochainement.');
+            loginModal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        });
+        
+        // Toast notification
+        const orderToast = document.getElementById('orderToast');
+        const toastMessage = document.getElementById('toastMessage');
+        const closeToast = document.getElementById('closeToast');
+        
+        function showToast(message) {
+            toastMessage.textContent = message;
+            orderToast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                orderToast.classList.add('hidden');
+            }, 5000);
+        }
+        
+        closeToast.addEventListener('click', () => {
+            orderToast.classList.add('hidden');
+        });
+        
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === orderFormContainer) {
+                orderFormContainer.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+            
+            if (e.target === loginModal) {
+                loginModal.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+        });
+        
+        // Simple animations when scrolling
+        const observerOptions = {
+            threshold: 0.1
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fadeIn');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.fade-in').forEach(element => {
+            observer.observe(element);
+        });
+    </script>
+</body>
+</html>
